@@ -23,12 +23,6 @@ public class RBTree<K extends Comparable<K>, V> {
     private Node root;
     private int size;
 
-    private boolean isRed(Node node) {
-        if (node == null) {
-            return BLACK;
-        }
-        return  node.color;
-    }
     public RBTree(){
         root = null;
         size = 0;
@@ -42,9 +36,30 @@ public class RBTree<K extends Comparable<K>, V> {
         return size == 0;
     }
 
+    private boolean isRed(Node node) {
+        if (node == null) {
+            return BLACK;
+        }
+        return  node.color;
+    }
+
+    private Node leftRotate(Node node) {
+
+        Node x = node.right;
+
+        node.right = x.left;
+        x.left = node;
+
+        x.color = node.color;
+        node.color = RED;
+
+        return x;
+    }
+
     // 向二分搜索树中添加新的元素(key, value)
     public void add(K key, V value){
         root = add(root, key, value);
+        root.color = BLACK;
     }
 
     // 向以node为根的二分搜索树中插入元素(key, value)，递归算法
