@@ -56,6 +56,26 @@ public class RBTree<K extends Comparable<K>, V> {
         return x;
     }
 
+    private Node rightRotate(Node node) {
+
+        Node x = node.left;
+
+        node.left = x.right;
+        x.right = node;
+
+        x.color = node.color;
+        node.color = RED;
+
+        return x;
+    }
+
+    private void flipColors(Node node) {
+
+        node.color = RED;
+        node.left.color = BLACK;
+        node.right.color = BLACK;
+    }
+
     // 向二分搜索树中添加新的元素(key, value)
     public void add(K key, V value){
         root = add(root, key, value);
@@ -77,6 +97,18 @@ public class RBTree<K extends Comparable<K>, V> {
             node.right = add(node.right, key, value);
         else // key.compareTo(node.key) == 0
             node.value = value;
+
+        if (isRed(node.right) && !isRed(node.left)) {
+            node = leftRotate(node);
+        }
+
+        if (isRed(node.left) && !isRed(node.left.left)) {
+            node = rightRotate(node);
+        }
+
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
+        }
 
         return node;
     }
